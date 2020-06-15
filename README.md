@@ -74,7 +74,7 @@ func main() {
 		log.Fatalf("Failed to create RouteGroup client: %v", err)
 	}
 
-    ls, err := zcli.ZalandoV1().RouteGroups("").List(context.TODO(), metav1.ListOptions{})
+	ls, err := zcli.ZalandoV1().RouteGroups("").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Failed to list routegroups: %v", err)
 	}
