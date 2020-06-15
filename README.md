@@ -2,7 +2,7 @@
 client-go implementation of
 [routegroup](https://opensource.zalando.com/skipper/kubernetes/routegroups/).
 
-There is example code in ./cli/rg-client-test to show how to use
+There is example code in [./cli/rg-client-test](./blob/master/cli/rg-client-test/main.go) to show how to use
 it. If you want to build the example you can run `make`, which will do
 code generation and build this example client application, that you
 can run from build/ directory with `./build/rg-example`. You can use
