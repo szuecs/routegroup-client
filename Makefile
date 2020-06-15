@@ -9,7 +9,7 @@ SOURCES        = $(shell find . -name '*.go')
 GOPKGS         = $(shell go list ./...)
 BUILD_FLAGS    ?= -v
 LDFLAGS        ?= -X main.version=$(VERSION) -w -s
-GENERATED      = client apis/zalando.org/v1/zz_generated.deepcopy.go
+GENERATED      = client apis/zalando.org/v1/zz_generated.deepcopy.go informers listers
 
 default: build.local
 
