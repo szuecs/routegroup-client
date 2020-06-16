@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	rgclient "github.com/szuecs/routegroup-client"
@@ -16,14 +15,14 @@ func main() {
 	log.Printf("cli: %#v", cli)
 
 	// example kubernetes.Interface access
-	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
-	//ings, err := cli.NetworkingV1().Ingress("").List(context.TODO(), metav1.ListOptions{})
+	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(metav1.ListOptions{})
+	//ings, err := cli.NetworkingV1().Ingress("").List(metav1.ListOptions{})
 	for _, ing := range ings.Items {
 		log.Printf("ing NAmespace/Name: %s/%s", ing.Namespace, ing.Name)
 	}
 
 	// example RouteGroups access
-	l, err := cli.ZalandoV1().RouteGroups("").List(context.TODO(), metav1.ListOptions{})
+	l, err := cli.ZalandoV1().RouteGroups("").List(metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Failed to get RouteGroup list: %v", err)
 	}
@@ -38,7 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create RouteGroup client: %v", err)
 	}
-	ls, err := zcli.ZalandoV1().RouteGroups("").List(context.TODO(), metav1.ListOptions{})
+	ls, err := zcli.ZalandoV1().RouteGroups("").List(metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Failed to list routegroups: %v", err)
 	}
