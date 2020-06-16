@@ -1,8 +1,8 @@
 build/
-apis/zalando.org/v1/zz_generated.deepcopy.go
-client/
-listers/
-informers/
+#apis/zalando.org/v1/zz_generated.deepcopy.go
+#client/
+#listers/
+#informers/
 
 # Binaries for programs and plugins
 *.exe
