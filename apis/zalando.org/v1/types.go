@@ -30,7 +30,7 @@ type RouteGroupList struct {
 
 // +k8s:deepcopy-gen=true
 type RouteGroupSpec struct {
-	Hosts           []string                     `json:"hosts"`
+	Hosts           []string                     `json:"hosts,omitempty"`
 	Backends        []RouteGroupBackend          `json:"backends"`
 	DefaultBackends []RouteGroupBackendReference `json:"defaultBackends,omitempty"`
 	Routes          []RouteGroupRouteSpec        `json:"routes,omitempty"`
@@ -45,13 +45,13 @@ type RouteGroupBackend struct {
 	// Address is required for Type network
 	Address string `json:"address"`
 	// Algorithm is required for Type lb
-	Algorithm string `json:"algorithm"`
+	Algorithm string `json:"algorithm,omitempty"`
 	// Endpoints is required for Type lb
-	Endpoints []string `json:"endpoints"`
+	Endpoints []string `json:"endpoints,omitempty"`
 	// ServiceName is required for Type service
-	ServiceName string `json:"serviceName"`
+	ServiceName string `json:"serviceName,omitempty"`
 	// ServicePort is required for Type service
-	ServicePort int `json:"servicePort"`
+	ServicePort int `json:"servicePort,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
