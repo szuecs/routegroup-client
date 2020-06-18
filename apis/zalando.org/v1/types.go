@@ -43,7 +43,7 @@ type RouteGroupBackend struct {
 	// Type is one of "service|shunt|loopback|dynamic|lb|network"
 	Type string `json:"type"`
 	// Address is required for Type network
-	Address string `json:"address"`
+	Address string `json:"address,omitempty"`
 	// Algorithm is required for Type lb
 	Algorithm string `json:"algorithm,omitempty"`
 	// Endpoints is required for Type lb
