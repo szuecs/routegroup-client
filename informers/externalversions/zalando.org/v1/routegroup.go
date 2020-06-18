@@ -5,7 +5,6 @@
 package v1
 
 import (
-	"context"
 	time "time"
 
 	zalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
@@ -48,13 +47,13 @@ func NewFilteredRouteGroupInformer(client clientset.Interface, namespace string,
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ZalandoV1().RouteGroups(namespace).List(context.TODO(), options)
+				return client.ZalandoV1().RouteGroups(namespace).List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ZalandoV1().RouteGroups(namespace).Watch(context.TODO(), options)
+				return client.ZalandoV1().RouteGroups(namespace).Watch(options)
 			},
 		},
 		&zalandoorgv1.RouteGroup{},

@@ -16,7 +16,7 @@ type RouteGroup struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   RouteGroupSpec   `json:"spec"`
-	Status RouteGroupStatus `json:"status"`
+	Status RouteGroupStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

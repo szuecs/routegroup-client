@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/davecgh/go-spew/spew"
@@ -14,7 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create unified RouteGroup client: %v", err)
 	}
-	log.Printf("cli: %#v", cli)
+	log.Println("have cli")
 
 	// example kubernetes.Interface access
 	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(metav1.ListOptions{})
@@ -22,29 +23,18 @@ func main() {
 	for _, ing := range ings.Items {
 		log.Printf("ing NAmespace/Name: %s/%s", ing.Namespace, ing.Name)
 	}
+	log.Printf("have ing %d", len(ings.Items))
 
 	// example RouteGroups access
 	l, err := cli.ZalandoV1().RouteGroups("").List(metav1.ListOptions{})
 	if err != nil {
-		log.Fatalf("Failed to get RouteGroup list: %v", err)
-	}
-	log.Printf("%#v", l)
-	for _, rg := range l.Items {
-		log.Printf("rg Namespace/Name: %s/%s", rg.Namespace, rg.Name)
-		log.Printf("status: %+v", rg.Status)
-		log.Printf("spec: %+v", rg.Spec)
-	}
-
-	zcli, err := rgclient.Create()
-	if err != nil {
-		log.Fatalf("Failed to create RouteGroup client: %v", err)
-	}
-	ls, err := zcli.ZalandoV1().RouteGroups("").List(metav1.ListOptions{})
-	if err != nil {
-		log.Fatalf("Failed to list routegroups: %v", err)
-	}
-	for _, rg := range ls.Items {
-		log.Printf("rg Namespace/Name: %s/%s", rg.Namespace, rg.Name)
+		log.Printf("Failed to get RouteGroup list: %v", err)
+	} else {
+		for _, rg := range l.Items {
+			log.Printf("rg Namespace/Name: %s/%s", rg.Namespace, rg.Name)
+			log.Printf("status: %+v", rg.Status)
+			log.Printf("spec: %+v", rg.Spec)
+		}
 	}
 
 	// test create
@@ -84,7 +74,8 @@ func main() {
 				{
 					PathSubtree: "/router-response",
 					Filters: []string{
-						`status(418) -> inlineContent("I am a teapot")`,
+						`status(418)`,
+						`inlineContent("I am a teapot")`,
 					},
 					Backends: []rgv1.RouteGroupBackendReference{
 						{
@@ -96,11 +87,19 @@ func main() {
 			},
 		},
 	}
-	rg, err := zcli.ZalandoV1().RouteGroups(namespace).Create(newRg, metav1.CreateOptions{})
+
+	b, err := json.Marshal(newRg)
+	log.Printf("b: %s", string(b))
+	if err != nil {
+		log.Fatalf("json marshal failed: %v", err)
+	}
+
+	//rg, err := cli.ZalandoV1().RouteGroups(namespace).Create(newRg, metav1.CreateOptions{})
+	rg, err := cli.ZalandoV1().RouteGroups(namespace).Create(newRg)
 	if err != nil {
 		spew.Dump(newRg)
-		log.Printf("newRg: %#v", newRg)
 		log.Fatalf("Failed to create routegroup: %v", err)
 	}
-	spew.Dump(rg)
+	//spew.Dump(rg)
+	log.Printf("Created %s/%s", namespace, rg.Name)
 }
