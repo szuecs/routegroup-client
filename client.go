@@ -90,6 +90,7 @@ func getRestConfig() (*rest.Config, error) {
 			config = &rest.Config{
 				Host: LocalAPIServer,
 			}
+			err = nil
 		} else {
 			return nil, err
 		}
