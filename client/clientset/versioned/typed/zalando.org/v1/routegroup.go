@@ -5,6 +5,7 @@
 package v1
 
 import (
+	"context"
 	"time"
 
 	v1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
@@ -23,15 +24,15 @@ type RouteGroupsGetter interface {
 
 // RouteGroupInterface has methods to work with RouteGroup resources.
 type RouteGroupInterface interface {
-	Create(*v1.RouteGroup) (*v1.RouteGroup, error)
-	Update(*v1.RouteGroup) (*v1.RouteGroup, error)
-	UpdateStatus(*v1.RouteGroup) (*v1.RouteGroup, error)
-	Delete(name string, options *metav1.DeleteOptions) error
-	DeleteCollection(options *metav1.DeleteOptions, listOptions metav1.ListOptions) error
-	Get(name string, options metav1.GetOptions) (*v1.RouteGroup, error)
-	List(opts metav1.ListOptions) (*v1.RouteGroupList, error)
-	Watch(opts metav1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1.RouteGroup, err error)
+	Create(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.CreateOptions) (*v1.RouteGroup, error)
+	Update(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.UpdateOptions) (*v1.RouteGroup, error)
+	UpdateStatus(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.UpdateOptions) (*v1.RouteGroup, error)
+	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
+	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.RouteGroup, error)
+	List(ctx context.Context, opts metav1.ListOptions) (*v1.RouteGroupList, error)
+	Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.RouteGroup, err error)
 	RouteGroupExpansion
 }
 
@@ -50,20 +51,20 @@ func newRouteGroups(c *ZalandoV1Client, namespace string) *routeGroups {
 }
 
 // Get takes name of the routeGroup, and returns the corresponding routeGroup object, and an error if there is any.
-func (c *routeGroups) Get(name string, options metav1.GetOptions) (result *v1.RouteGroup, err error) {
+func (c *routeGroups) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.RouteGroup, err error) {
 	result = &v1.RouteGroup{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("routegroups").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of RouteGroups that match those selectors.
-func (c *routeGroups) List(opts metav1.ListOptions) (result *v1.RouteGroupList, err error) {
+func (c *routeGroups) List(ctx context.Context, opts metav1.ListOptions) (result *v1.RouteGroupList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -74,13 +75,13 @@ func (c *routeGroups) List(opts metav1.ListOptions) (result *v1.RouteGroupList, 
 		Resource("routegroups").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested routeGroups.
-func (c *routeGroups) Watch(opts metav1.ListOptions) (watch.Interface, error) {
+func (c *routeGroups) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -91,87 +92,90 @@ func (c *routeGroups) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 		Resource("routegroups").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(ctx)
 }
 
 // Create takes the representation of a routeGroup and creates it.  Returns the server's representation of the routeGroup, and an error, if there is any.
-func (c *routeGroups) Create(routeGroup *v1.RouteGroup) (result *v1.RouteGroup, err error) {
+func (c *routeGroups) Create(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.CreateOptions) (result *v1.RouteGroup, err error) {
 	result = &v1.RouteGroup{}
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("routegroups").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(routeGroup).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Update takes the representation of a routeGroup and updates it. Returns the server's representation of the routeGroup, and an error, if there is any.
-func (c *routeGroups) Update(routeGroup *v1.RouteGroup) (result *v1.RouteGroup, err error) {
+func (c *routeGroups) Update(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.UpdateOptions) (result *v1.RouteGroup, err error) {
 	result = &v1.RouteGroup{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("routegroups").
 		Name(routeGroup.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(routeGroup).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-
-func (c *routeGroups) UpdateStatus(routeGroup *v1.RouteGroup) (result *v1.RouteGroup, err error) {
+func (c *routeGroups) UpdateStatus(ctx context.Context, routeGroup *v1.RouteGroup, opts metav1.UpdateOptions) (result *v1.RouteGroup, err error) {
 	result = &v1.RouteGroup{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("routegroups").
 		Name(routeGroup.Name).
 		SubResource("status").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(routeGroup).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Delete takes name of the routeGroup and deletes it. Returns an error if one occurs.
-func (c *routeGroups) Delete(name string, options *metav1.DeleteOptions) error {
+func (c *routeGroups) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("routegroups").
 		Name(name).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *routeGroups) DeleteCollection(options *metav1.DeleteOptions, listOptions metav1.ListOptions) error {
+func (c *routeGroups) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	var timeout time.Duration
-	if listOptions.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("routegroups").
-		VersionedParams(&listOptions, scheme.ParameterCodec).
+		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // Patch applies the patch and returns the patched routeGroup.
-func (c *routeGroups) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1.RouteGroup, err error) {
+func (c *routeGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.RouteGroup, err error) {
 	result = &v1.RouteGroup{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
 		Resource("routegroups").
-		SubResource(subresources...).
 		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(data).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }

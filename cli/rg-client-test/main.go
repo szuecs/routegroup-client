@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 
@@ -18,15 +19,15 @@ func main() {
 	log.Println("have cli")
 
 	// example kubernetes.Interface access
-	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(metav1.ListOptions{})
-	//ings, err := cli.NetworkingV1().Ingress("").List(metav1.ListOptions{})
+	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
+	//ings, err := cli.NetworkingV1().Ingress("").List(context.TODO(), metav1.ListOptions{})
 	for _, ing := range ings.Items {
 		log.Printf("ing NAmespace/Name: %s/%s", ing.Namespace, ing.Name)
 	}
 	log.Printf("have ing %d", len(ings.Items))
 
 	// example RouteGroups access
-	l, err := cli.ZalandoV1().RouteGroups("").List(metav1.ListOptions{})
+	l, err := cli.ZalandoV1().RouteGroups("").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Printf("Failed to get RouteGroup list: %v", err)
 	} else {
@@ -94,8 +95,7 @@ func main() {
 		log.Fatalf("json marshal failed: %v", err)
 	}
 
-	//rg, err := cli.ZalandoV1().RouteGroups(namespace).Create(newRg, metav1.CreateOptions{})
-	rg, err := cli.ZalandoV1().RouteGroups(namespace).Create(newRg)
+	rg, err := cli.ZalandoV1().RouteGroups(namespace).Create(context.TODO(), newRg, metav1.CreateOptions{})
 	if err != nil {
 		spew.Dump(newRg)
 		log.Fatalf("Failed to create routegroup: %v", err)

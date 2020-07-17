@@ -5,6 +5,8 @@
 package fake
 
 import (
+	"context"
+
 	zalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -25,7 +27,7 @@ var routegroupsResource = schema.GroupVersionResource{Group: "zalando.org", Vers
 var routegroupsKind = schema.GroupVersionKind{Group: "zalando.org", Version: "v1", Kind: "RouteGroup"}
 
 // Get takes name of the routeGroup, and returns the corresponding routeGroup object, and an error if there is any.
-func (c *FakeRouteGroups) Get(name string, options v1.GetOptions) (result *zalandoorgv1.RouteGroup, err error) {
+func (c *FakeRouteGroups) Get(ctx context.Context, name string, options v1.GetOptions) (result *zalandoorgv1.RouteGroup, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(routegroupsResource, c.ns, name), &zalandoorgv1.RouteGroup{})
 
@@ -36,7 +38,7 @@ func (c *FakeRouteGroups) Get(name string, options v1.GetOptions) (result *zalan
 }
 
 // List takes label and field selectors, and returns the list of RouteGroups that match those selectors.
-func (c *FakeRouteGroups) List(opts v1.ListOptions) (result *zalandoorgv1.RouteGroupList, err error) {
+func (c *FakeRouteGroups) List(ctx context.Context, opts v1.ListOptions) (result *zalandoorgv1.RouteGroupList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(routegroupsResource, routegroupsKind, c.ns, opts), &zalandoorgv1.RouteGroupList{})
 
@@ -58,14 +60,14 @@ func (c *FakeRouteGroups) List(opts v1.ListOptions) (result *zalandoorgv1.RouteG
 }
 
 // Watch returns a watch.Interface that watches the requested routeGroups.
-func (c *FakeRouteGroups) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeRouteGroups) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(routegroupsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a routeGroup and creates it.  Returns the server's representation of the routeGroup, and an error, if there is any.
-func (c *FakeRouteGroups) Create(routeGroup *zalandoorgv1.RouteGroup) (result *zalandoorgv1.RouteGroup, err error) {
+func (c *FakeRouteGroups) Create(ctx context.Context, routeGroup *zalandoorgv1.RouteGroup, opts v1.CreateOptions) (result *zalandoorgv1.RouteGroup, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(routegroupsResource, c.ns, routeGroup), &zalandoorgv1.RouteGroup{})
 
@@ -76,7 +78,7 @@ func (c *FakeRouteGroups) Create(routeGroup *zalandoorgv1.RouteGroup) (result *z
 }
 
 // Update takes the representation of a routeGroup and updates it. Returns the server's representation of the routeGroup, and an error, if there is any.
-func (c *FakeRouteGroups) Update(routeGroup *zalandoorgv1.RouteGroup) (result *zalandoorgv1.RouteGroup, err error) {
+func (c *FakeRouteGroups) Update(ctx context.Context, routeGroup *zalandoorgv1.RouteGroup, opts v1.UpdateOptions) (result *zalandoorgv1.RouteGroup, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(routegroupsResource, c.ns, routeGroup), &zalandoorgv1.RouteGroup{})
 
@@ -88,7 +90,7 @@ func (c *FakeRouteGroups) Update(routeGroup *zalandoorgv1.RouteGroup) (result *z
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeRouteGroups) UpdateStatus(routeGroup *zalandoorgv1.RouteGroup) (*zalandoorgv1.RouteGroup, error) {
+func (c *FakeRouteGroups) UpdateStatus(ctx context.Context, routeGroup *zalandoorgv1.RouteGroup, opts v1.UpdateOptions) (*zalandoorgv1.RouteGroup, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateSubresourceAction(routegroupsResource, "status", c.ns, routeGroup), &zalandoorgv1.RouteGroup{})
 
@@ -99,7 +101,7 @@ func (c *FakeRouteGroups) UpdateStatus(routeGroup *zalandoorgv1.RouteGroup) (*za
 }
 
 // Delete takes name of the routeGroup and deletes it. Returns an error if one occurs.
-func (c *FakeRouteGroups) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeRouteGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewDeleteAction(routegroupsResource, c.ns, name), &zalandoorgv1.RouteGroup{})
 
@@ -107,15 +109,15 @@ func (c *FakeRouteGroups) Delete(name string, options *v1.DeleteOptions) error {
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeRouteGroups) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(routegroupsResource, c.ns, listOptions)
+func (c *FakeRouteGroups) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(routegroupsResource, c.ns, listOpts)
 
 	_, err := c.Fake.Invokes(action, &zalandoorgv1.RouteGroupList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched routeGroup.
-func (c *FakeRouteGroups) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *zalandoorgv1.RouteGroup, err error) {
+func (c *FakeRouteGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *zalandoorgv1.RouteGroup, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(routegroupsResource, c.ns, name, pt, data, subresources...), &zalandoorgv1.RouteGroup{})
 
