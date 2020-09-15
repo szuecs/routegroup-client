@@ -36,12 +36,25 @@ type RouteGroupSpec struct {
 	Routes          []RouteGroupRouteSpec        `json:"routes,omitempty"`
 }
 
+// RouteGroupBackendType is the type of the route group backend.
+// +kubebuilder:validation:Enum=service;shunt;loopback;dynamic;lb;network
+type RouteGroupBackendType string
+
+const (
+	ServiceRouteGroupBackend  RouteGroupBackendType = "service"
+	ShuntRouteGroupBackend    RouteGroupBackendType = "shunt"
+	LoopbackRouteGroupBackend RouteGroupBackendType = "loopback"
+	DynamicRouteGroupBackend  RouteGroupBackendType = "dynamic"
+	LBRouteGroupBackend       RouteGroupBackendType = "lb"
+	NetworkRouteGroupBackend  RouteGroupBackendType = "network"
+)
+
 // +k8s:deepcopy-gen=true
 type RouteGroupBackend struct {
 	// Name is the BackendName that can be referenced as RouteGroupBackendReference
 	Name string `json:"name"`
 	// Type is one of "service|shunt|loopback|dynamic|lb|network"
-	Type string `json:"type"`
+	Type RouteGroupBackendType `json:"type"`
 	// Address is required for Type network
 	Address string `json:"address,omitempty"`
 	// Algorithm is required for Type lb
