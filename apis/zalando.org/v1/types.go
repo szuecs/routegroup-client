@@ -56,14 +56,18 @@ type RouteGroupBackend struct {
 	// Type is one of "service|shunt|loopback|dynamic|lb|network"
 	Type RouteGroupBackendType `json:"type"`
 	// Address is required for Type network
+	// +optional
 	Address string `json:"address,omitempty"`
 	// Algorithm is required for Type lb
+	// +optional
 	Algorithm string `json:"algorithm,omitempty"`
 	// Endpoints is required for Type lb
 	Endpoints []string `json:"endpoints,omitempty"`
 	// ServiceName is required for Type service
+	// +optional
 	ServiceName string `json:"serviceName,omitempty"`
 	// ServicePort is required for Type service
+	// +optional
 	ServicePort int `json:"servicePort,omitempty"`
 }
 
@@ -73,6 +77,7 @@ type RouteGroupBackendReference struct {
 	BackendName string `json:"backendName"`
 	// Weight defines the traffic weight, if there are 2 or more
 	// default backends
+	// +optional
 	Weight int `json:"weight"`
 }
 
