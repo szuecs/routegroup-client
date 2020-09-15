@@ -165,7 +165,7 @@ func (in *RouteGroupRouteSpec) DeepCopyInto(out *RouteGroupRouteSpec) {
 	}
 	if in.Methods != nil {
 		in, out := &in.Methods, &out.Methods
-		*out = make([]string, len(*in))
+		*out = make([]HTTPMethod, len(*in))
 		copy(*out, *in)
 	}
 	return

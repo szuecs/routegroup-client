@@ -3,6 +3,8 @@
 package v1
 
 import (
+	"net/http"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -81,6 +83,22 @@ type RouteGroupBackendReference struct {
 	Weight int `json:"weight"`
 }
 
+// HTTPMethod is a valid HTTP method in uppercase.
+// +kubebuilder:validation:Enum=GET;HEAD;POST;PUT;PATCH;DELETE;CONNECT;OPTIONS;TRACE
+type HTTPMethod string
+
+const (
+	MethodGet     HTTPMethod = http.MethodGet
+	MethodHead    HTTPMethod = http.MethodHead
+	MethodPost    HTTPMethod = http.MethodPost
+	MethodPut     HTTPMethod = http.MethodPut
+	MethodPatch   HTTPMethod = http.MethodPatch
+	MethodDelete  HTTPMethod = http.MethodDelete
+	MethodConnect HTTPMethod = http.MethodConnect
+	MethodOptions HTTPMethod = http.MethodOptions
+	MethodTrace   HTTPMethod = http.MethodTrace
+)
+
 // +k8s:deepcopy-gen=true
 type RouteGroupRouteSpec struct {
 	// Path specifies Path predicate, only one of Path or PathSubtree is allowed
@@ -94,16 +112,20 @@ type RouteGroupRouteSpec struct {
 
 	// RouteGroupBackendReference specifies the list of backendReference that should
 	// be applied to override the defaultBackends
+	// +optional
 	Backends []RouteGroupBackendReference `json:"backends,omitempty"`
 
 	// Filters specifies the list of filters applied to the routeSpec
+	// +optional
 	Filters []string `json:"filters,omitempty"`
 
 	// Predicates specifies the list of predicates applied to the routeSpec
+	// +optional
 	Predicates []string `json:"predicates,omitempty"`
 
 	// Methods defines valid HTTP methods for the specified routeSpec
-	Methods []string `json:"methods,omitempty"`
+	// +optional
+	Methods []HTTPMethod `json:"methods,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
