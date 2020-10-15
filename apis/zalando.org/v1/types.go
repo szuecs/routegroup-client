@@ -8,11 +8,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+
 // +k8s:deepcopy-gen=true
+// +kubebuilder:resource:shortName=rg
+// +kubebuilder:resource:categories="all"
+// +kubebuilder:printcolumn:name="Hosts",type=string,JSONPath=`.spec.hosts`,description="Hosts defined for the RouteGroup"
+// +kubebuilder:printcolumn:name="Address",type=string,JSONPath=`.status.loadBalancer`,description="Address of the Load Balancer for the RouteGroup"
+// +kubebuilder:subresource:status
 type RouteGroup struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -32,10 +37,15 @@ type RouteGroupList struct {
 
 // +k8s:deepcopy-gen=true
 type RouteGroupSpec struct {
-	Hosts           []string                     `json:"hosts,omitempty"`
-	Backends        []RouteGroupBackend          `json:"backends"`
+	// List of hostnames for the RouteGroup.
+	Hosts []string `json:"hosts,omitempty"`
+	// List of backends that can be referenced in the routes.
+	Backends []RouteGroupBackend `json:"backends"`
+	// DefaultBackends is a list of default backends defined if no explicit
+	// backend is defined for a route.
 	DefaultBackends []RouteGroupBackendReference `json:"defaultBackends,omitempty"`
-	Routes          []RouteGroupRouteSpec        `json:"routes,omitempty"`
+	// +kubebuilder:validation:MinItems=1
+	Routes []RouteGroupRouteSpec `json:"routes,omitempty"`
 }
 
 // RouteGroupBackendType is the type of the route group backend.
@@ -64,6 +74,7 @@ type RouteGroupBackend struct {
 	// +optional
 	Algorithm string `json:"algorithm,omitempty"`
 	// Endpoints is required for Type lb
+	// +kubebuilder:validation:MinItems=1
 	Endpoints []string `json:"endpoints,omitempty"`
 	// ServiceName is required for Type service
 	// +optional
@@ -79,6 +90,7 @@ type RouteGroupBackendReference struct {
 	BackendName string `json:"backendName"`
 	// Weight defines the traffic weight, if there are 2 or more
 	// default backends
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	Weight int `json:"weight"`
 }

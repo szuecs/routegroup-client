@@ -5,8 +5,8 @@
 package zalando
 
 import (
-	internalinterfaces "github.com/szuecs/routegroup-client/informers/externalversions/internalinterfaces"
-	v1 "github.com/szuecs/routegroup-client/informers/externalversions/zalando.org/v1"
+	internalinterfaces "github.com/szuecs/routegroup-client/client/informers/externalversions/internalinterfaces"
+	v1 "github.com/szuecs/routegroup-client/client/informers/externalversions/zalando.org/v1"
 )
 
 // Interface provides access to each of this group's versions.
