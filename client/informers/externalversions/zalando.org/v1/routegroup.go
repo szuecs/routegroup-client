@@ -9,13 +9,13 @@ import (
 	time "time"
 
 	zalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
-	internalinterfaces "github.com/szuecs/routegroup-client/informers/externalversions/internalinterfaces"
+	versioned "github.com/szuecs/routegroup-client/client/clientset/versioned"
+	internalinterfaces "github.com/szuecs/routegroup-client/client/informers/externalversions/internalinterfaces"
+	v1 "github.com/szuecs/routegroup-client/client/listers/zalando.org/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
-	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/clientset"
-	v1 "k8s.io/kubernetes/pkg/client/listers/zalando.org/v1"
 )
 
 // RouteGroupInformer provides access to a shared informer and lister for
@@ -34,14 +34,14 @@ type routeGroupInformer struct {
 // NewRouteGroupInformer constructs a new informer for RouteGroup type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewRouteGroupInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+func NewRouteGroupInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewFilteredRouteGroupInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredRouteGroupInformer constructs a new informer for RouteGroup type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredRouteGroupInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredRouteGroupInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
@@ -63,7 +63,7 @@ func NewFilteredRouteGroupInformer(client clientset.Interface, namespace string,
 	)
 }
 
-func (f *routeGroupInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func (f *routeGroupInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 	return NewFilteredRouteGroupInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
