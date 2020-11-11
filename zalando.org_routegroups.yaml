@@ -50,6 +50,11 @@ spec:
                       type: string
                     algorithm:
                       description: Algorithm is required for Type lb
+                      enum:
+                      - roundRobin
+                      - random
+                      - consistentHash
+                      - powerOfRandomNChoices
                       type: string
                     endpoints:
                       description: Endpoints is required for Type lb
