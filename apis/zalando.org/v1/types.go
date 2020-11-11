@@ -61,6 +61,18 @@ const (
 	NetworkRouteGroupBackend  RouteGroupBackendType = "network"
 )
 
+// BackendAlgorithmType is the type of algorithm used for load balancing
+// traffic to a backend. This is only valid for backend type lb|service.
+// +kubebuilder:validation:Enum=roundRobin;random;consistentHash;powerOfRandomNChoices
+type BackendAlgorithmType string
+
+const (
+	RoundRobinBackendAlgorithm            BackendAlgorithmType = "roundRobin"
+	RandomBackendAlgorithm                BackendAlgorithmType = "random"
+	ConsistentHashBackendAlgorithm        BackendAlgorithmType = "consistentHash"
+	PowerOfRandomNChoicesBackendAlgorithm BackendAlgorithmType = "powerOfRandomNChoices"
+)
+
 // +k8s:deepcopy-gen=true
 type RouteGroupBackend struct {
 	// Name is the BackendName that can be referenced as RouteGroupBackendReference
@@ -72,7 +84,7 @@ type RouteGroupBackend struct {
 	Address string `json:"address,omitempty"`
 	// Algorithm is required for Type lb
 	// +optional
-	Algorithm string `json:"algorithm,omitempty"`
+	Algorithm BackendAlgorithmType `json:"algorithm,omitempty"`
 	// Endpoints is required for Type lb
 	// +kubebuilder:validation:MinItems=1
 	Endpoints []string `json:"endpoints,omitempty"`
