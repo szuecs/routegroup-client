@@ -13,8 +13,7 @@ import (
 // +kubebuilder:object:root=true
 
 // +k8s:deepcopy-gen=true
-// +kubebuilder:resource:shortName=rg
-// +kubebuilder:resource:categories="all"
+// +kubebuilder:resource:categories="all",shortName=rg;rgs
 // +kubebuilder:printcolumn:name="Hosts",type=string,JSONPath=`.spec.hosts`,description="Hosts defined for the RouteGroup"
 // +kubebuilder:printcolumn:name="Address",type=string,JSONPath=`.status.loadBalancer`,description="Address of the Load Balancer for the RouteGroup"
 // +kubebuilder:subresource:status
