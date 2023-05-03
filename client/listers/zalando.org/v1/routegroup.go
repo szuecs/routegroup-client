@@ -12,8 +12,10 @@ import (
 )
 
 // RouteGroupLister helps list RouteGroups.
+// All objects returned here must be treated as read-only.
 type RouteGroupLister interface {
 	// List lists all RouteGroups in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.RouteGroup, err error)
 	// RouteGroups returns an object that can list and get RouteGroups.
 	RouteGroups(namespace string) RouteGroupNamespaceLister
@@ -44,10 +46,13 @@ func (s *routeGroupLister) RouteGroups(namespace string) RouteGroupNamespaceList
 }
 
 // RouteGroupNamespaceLister helps list and get RouteGroups.
+// All objects returned here must be treated as read-only.
 type RouteGroupNamespaceLister interface {
 	// List lists all RouteGroups in the indexer for a given namespace.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.RouteGroup, err error)
 	// Get retrieves the RouteGroup from the indexer for a given namespace and name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.RouteGroup, error)
 	RouteGroupNamespaceListerExpansion
 }
