@@ -103,7 +103,7 @@ func (c *FakeRouteGroups) UpdateStatus(ctx context.Context, routeGroup *zalandoo
 // Delete takes name of the routeGroup and deletes it. Returns an error if one occurs.
 func (c *FakeRouteGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(routegroupsResource, c.ns, name), &zalandoorgv1.RouteGroup{})
+		Invokes(testing.NewDeleteActionWithOptions(routegroupsResource, c.ns, name, opts), &zalandoorgv1.RouteGroup{})
 
 	return err
 }
