@@ -53,7 +53,6 @@ type RouteGroupSpec struct {
 }
 
 // RouteGroupBackendType is the type of the route group backend.
-// +kubebuilder:validation:Enum=service;shunt;loopback;dynamic;lb;network
 type RouteGroupBackendType string
 
 const (
@@ -67,7 +66,6 @@ const (
 
 // BackendAlgorithmType is the type of algorithm used for load balancing
 // traffic to a backend. This is only valid for backend type lb|service.
-// +kubebuilder:validation:Enum=roundRobin;random;consistentHash;powerOfRandomNChoices
 type BackendAlgorithmType string
 
 const (
@@ -81,21 +79,33 @@ const (
 type RouteGroupBackend struct {
 	// Name is the BackendName that can be referenced as RouteGroupBackendReference
 	Name string `json:"name"`
-	// Type is one of "service|shunt|loopback|dynamic|lb|network"
+	// Type of the backend.
+	// `service`- resolve Kubernetes service to the available Endpoints belonging to the Service, and generate load balanced routes using them.
+	// `shunt` - reply directly from the proxy itself. This can be used to shortcut, for example have a default that replies with 404 or use skipper as a backend serving static content in demos.
+	// `loopback` - lookup again the routing table to a better matching route after processing the current route. Like this you can add some headers or change the request path for some specific matching requests.
+	// `dynamic` - use the backend provided by filters. This allows skipper as library users to do proxy calls to a certain target from their own implementation dynamically looked up by their filters.
+	// `lb` - balance the load across multiple network endpoints using specified algorithm. If algorithm is not specified it will use the default algorithm set by Skipper at start.
+	// `network` - use arbitrary HTTP or HTTPS URL.
+	// +kubebuilder:validation:Enum=service;shunt;loopback;dynamic;lb;network
 	Type RouteGroupBackendType `json:"type"`
-	// Address is required for Type network
+	// Address is required for type `network`
 	// +optional
 	Address string `json:"address,omitempty"`
-	// Algorithm is required for Type lb
+	// Algorithm is required for type `lb`.
+	// `roundRobin` - backend is chosen by the round robin algorithm, starting with a random selected backend to spread across all backends from the beginning.
+	// `random` - backend is chosen at random.
+	// `consistentHash` - backend is chosen by [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) algorithm based on the request key. The request key is derived from `X-Forwarded-For` header or request remote IP address as the fallback. Use [`consistentHashKey`](filters.md#consistenthashkey) filter to set the request key. Use [`consistentHashBalanceFactor`](filters.md#consistenthashbalancefactor) to prevent popular keys from overloading a single backend endpoint.
+	// `powerOfRandomNChoices` - backend is chosen by selecting N random endpoints and picking the one with least outstanding requests from them (see http://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf).
+	// +kubebuilder:validation:Enum=roundRobin;random;consistentHash;powerOfRandomNChoices
 	// +optional
 	Algorithm BackendAlgorithmType `json:"algorithm,omitempty"`
-	// Endpoints is required for Type lb
+	// Endpoints is required for type `lb`
 	// +kubebuilder:validation:MinItems=1
 	Endpoints []string `json:"endpoints,omitempty"`
-	// ServiceName is required for Type service
+	// ServiceName is required for type `service`
 	// +optional
 	ServiceName string `json:"serviceName,omitempty"`
-	// ServicePort is required for Type service
+	// ServicePort is required for type `service`
 	// +optional
 	ServicePort int `json:"servicePort,omitempty"`
 }
