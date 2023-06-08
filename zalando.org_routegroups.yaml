@@ -48,7 +48,7 @@ spec:
           spec:
             properties:
               backends:
-                description: List of backends that can be referenced in the routes.
+                description: List of backends that can be referenced in the routes
                 items:
                   properties:
                     address:
@@ -123,15 +123,17 @@ spec:
                 type: array
               defaultBackends:
                 description: DefaultBackends is a list of default backends defined
-                  if no explicit backend is defined for a route.
+                  if no explicit backend is defined for a route
                 items:
                   properties:
                     backendName:
-                      description: BackendName references the skipperBackend by name
+                      description: BackendName references backend by name
                       type: string
                     weight:
-                      description: Weight defines the traffic weight, if there are
-                        2 or more default backends
+                      description: Weight defines a portion of traffic for the referenced
+                        backend. It equals to weight divided by the sum of all backend
+                        weights. When all references have zero (or unspecified) weight
+                        then traffic is split equally between them.
                       minimum: 0
                       type: integer
                   required:
@@ -139,12 +141,14 @@ spec:
                   type: object
                 type: array
               hosts:
-                description: List of hostnames for the RouteGroup.
+                description: List of hostnames for the RouteGroup
                 items:
                   pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
                   type: string
                 type: array
               routes:
+                description: Routes describe how a matching HTTP request is handled
+                  and where it is forwarded to
                 items:
                   properties:
                     backends:
@@ -153,12 +157,14 @@ spec:
                       items:
                         properties:
                           backendName:
-                            description: BackendName references the skipperBackend
-                              by name
+                            description: BackendName references backend by name
                             type: string
                           weight:
-                            description: Weight defines the traffic weight, if there
-                              are 2 or more default backends
+                            description: Weight defines a portion of traffic for the
+                              referenced backend. It equals to weight divided by the
+                              sum of all backend weights. When all references have
+                              zero (or unspecified) weight then traffic is split equally
+                              between them.
                             minimum: 0
                             type: integer
                         required:
