@@ -41,13 +41,14 @@ type RouteGroupList struct {
 
 // +k8s:deepcopy-gen=true
 type RouteGroupSpec struct {
-	// List of hostnames for the RouteGroup.
+	// List of hostnames for the RouteGroup
 	Hosts []string `json:"hosts,omitempty"`
-	// List of backends that can be referenced in the routes.
+	// List of backends that can be referenced in the routes
 	Backends []RouteGroupBackend `json:"backends"`
 	// DefaultBackends is a list of default backends defined if no explicit
-	// backend is defined for a route.
+	// backend is defined for a route
 	DefaultBackends []RouteGroupBackendReference `json:"defaultBackends,omitempty"`
+	// Routes describe how a matching HTTP request is handled and where it is forwarded to
 	// +kubebuilder:validation:MinItems=1
 	Routes []RouteGroupRouteSpec `json:"routes,omitempty"`
 }
@@ -112,10 +113,11 @@ type RouteGroupBackend struct {
 
 // +k8s:deepcopy-gen=true
 type RouteGroupBackendReference struct {
-	// BackendName references the skipperBackend by name
+	// BackendName references backend by name
 	BackendName string `json:"backendName"`
-	// Weight defines the traffic weight, if there are 2 or more
-	// default backends
+	// Weight defines a portion of traffic for the referenced backend.
+	// It equals to weight divided by the sum of all backend weights.
+	// When all references have zero (or unspecified) weight then traffic is split equally between them.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	Weight int `json:"weight"`
