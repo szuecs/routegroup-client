@@ -64,7 +64,7 @@ func NewClientset(config *rest.Config) (*Clientset, error) {
 
 // Create returns the Zalandointerface client
 func Create() (ZalandoInterface, error) {
-	config, err := getRestConfig()
+	config, err := getRestConfigWithOptions(nil)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func Create() (ZalandoInterface, error) {
 
 // CreateUnified returns the unified client
 func CreateUnified() (Interface, error) {
-	config, err := getRestConfig()
+	config, err := getRestConfigWithOptions(nil)
 	if err != nil {
 		return nil, err
 	}
@@ -102,28 +102,19 @@ func CreateUnifiedWithOptions(opts *Options) (Interface, error) {
 	return client, nil
 }
 
-func getRestConfig() (*rest.Config, error) {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		if errors.Is(err, rest.ErrNotInCluster) {
-			config = &rest.Config{
-				Host: LocalAPIServer,
-			}
-			err = nil
-		} else {
-			return nil, err
-		}
-	}
-	return config, err
-}
-
 func getRestConfigWithOptions(opts *Options) (*rest.Config, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		if errors.Is(err, rest.ErrNotInCluster) {
-			config = &rest.Config{
-				Host:            LocalAPIServer,
-				BearerTokenFile: opts.TokenFile,
+			if opts == nil {
+				config = &rest.Config{
+					Host: LocalAPIServer,
+				}
+			} else {
+				config = &rest.Config{
+					Host:            LocalAPIServer,
+					BearerTokenFile: opts.TokenFile,
+				}
 			}
 			err = nil
 		} else {

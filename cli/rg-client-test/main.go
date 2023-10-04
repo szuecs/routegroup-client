@@ -13,6 +13,7 @@ import (
 
 func main() {
 	cli, err := rgclient.CreateUnifiedWithOptions(&rgclient.Options{TokenFile: "/tmp/k8s_token"})
+	// cli, err := rgclient.CreateUnified()
 	if err != nil {
 		log.Fatalf("Failed to create unified RouteGroup client: %v", err)
 	}
