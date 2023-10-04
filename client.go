@@ -87,7 +87,7 @@ func CreateUnified() (Interface, error) {
 	return client, nil
 }
 
-// CreateUnified returns the unified client
+// CreateUnifiedWithOptions returns the unified client that
 func CreateUnifiedWithOptions(opts *Options) (Interface, error) {
 	config, err := getRestConfigWithOptions(opts)
 	if err != nil {
