@@ -34,6 +34,10 @@ type Clientset struct {
 	zclient *zclient.Clientset
 }
 
+type Options struct {
+	TokenFile string
+}
+
 // ZalandoV1 implements ZalandoInterface
 func (cs *Clientset) ZalandoV1() zalandov1.ZalandoV1Interface {
 	return cs.zclient.ZalandoV1()
@@ -83,12 +87,43 @@ func CreateUnified() (Interface, error) {
 	return client, nil
 }
 
+// CreateUnified returns the unified client
+func CreateUnifiedWithOptions(opts *Options) (Interface, error) {
+	config, err := getRestConfigWithOptions(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	client, err := NewClientset(config)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a unified client: %v", err)
+	}
+
+	return client, nil
+}
+
 func getRestConfig() (*rest.Config, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		if errors.Is(err, rest.ErrNotInCluster) {
 			config = &rest.Config{
 				Host: LocalAPIServer,
+			}
+			err = nil
+		} else {
+			return nil, err
+		}
+	}
+	return config, err
+}
+
+func getRestConfigWithOptions(opts *Options) (*rest.Config, error) {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		if errors.Is(err, rest.ErrNotInCluster) {
+			config = &rest.Config{
+				Host:            LocalAPIServer,
+				BearerTokenFile: opts.TokenFile,
 			}
 			err = nil
 		} else {

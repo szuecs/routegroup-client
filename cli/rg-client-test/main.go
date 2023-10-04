@@ -12,17 +12,21 @@ import (
 )
 
 func main() {
-	cli, err := rgclient.CreateUnified()
+	cli, err := rgclient.CreateUnifiedWithOptions(&rgclient.Options{TokenFile: "/tmp/k8s_token"})
 	if err != nil {
 		log.Fatalf("Failed to create unified RouteGroup client: %v", err)
 	}
 	log.Println("have cli")
 
 	// example kubernetes.Interface access
-	ings, err := cli.ExtensionsV1beta1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
-	//ings, err := cli.NetworkingV1().Ingress("").List(context.TODO(), metav1.ListOptions{})
+	// ings, err := cli.ExtensionsV1beta1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
+	ings, err := cli.NetworkingV1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		log.Fatalf("Failed to get Ingress list: %v", err)
+	}
+
 	for _, ing := range ings.Items {
-		log.Printf("ing NAmespace/Name: %s/%s", ing.Namespace, ing.Name)
+		log.Printf("ing Namespace/Name: %s/%s\n", ing.Namespace, ing.Name)
 	}
 	log.Printf("have ing %d", len(ings.Items))
 
