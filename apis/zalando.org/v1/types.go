@@ -51,6 +51,10 @@ type RouteGroupSpec struct {
 	// Routes describe how a matching HTTP request is handled and where it is forwarded to
 	// +kubebuilder:validation:MinItems=1
 	Routes []RouteGroupRouteSpec `json:"routes,omitempty"`
+	// TLS defines which Kubernetes secret will be used to terminate the connection
+	// based on the matching hostnames
+	// +optional
+	TLS []RouteGroupTLSSpec `json:"tls,omitempty"`
 }
 
 // RouteGroupBackendType is the type of the route group backend.
@@ -166,6 +170,19 @@ type RouteGroupRouteSpec struct {
 	// Methods defines valid HTTP methods for the specified routeSpec
 	// +optional
 	Methods []HTTPMethod `json:"methods,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+type RouteGroupTLSSpec struct {
+	// Host specifies the list of hosts included in the TLS secret.
+	// The values in this list must match the name/s used in the tlsSecret.
+	// +kubebuilder:validation:MinItems=1
+	Hosts []string `json:"hosts,omitempty"`
+
+	// SecretName is the name of the secret used to terminate TLS traffic on port 443.
+	// Field is left optional to allow TLS routing based on SNI hostname alone.
+	// +optional
+	SecretName string `json:"secretName,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
