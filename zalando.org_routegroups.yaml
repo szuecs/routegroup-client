@@ -220,9 +220,10 @@ spec:
                 items:
                   properties:
                     hosts:
-                      description: Host specifies the list of hosts included in the
-                        TLS secret. The values in this list must match the name/s
-                        used in the tlsSecret.
+                      description: TLS hosts specify the list of hosts included in
+                        the TLS secret. The values in this list must match the host
+                        name(s) used for the RouteGroup in order to terminate TLS
+                        for the host(s).
                       items:
                         pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
                         type: string
@@ -230,8 +231,8 @@ spec:
                       type: array
                     secretName:
                       description: SecretName is the name of the secret used to terminate
-                        TLS traffic on port 443. Field is left optional to allow TLS
-                        routing based on SNI hostname alone.
+                        TLS traffic. Secret should reside in the same namespace as
+                        the RouteGroup.
                       type: string
                   type: object
                 type: array

@@ -174,14 +174,14 @@ type RouteGroupRouteSpec struct {
 
 // +k8s:deepcopy-gen=true
 type RouteGroupTLSSpec struct {
-	// Host specifies the list of hosts included in the TLS secret.
-	// The values in this list must match the name/s used in the tlsSecret.
+	// TLS hosts specify the list of hosts included in the TLS secret.
+	// The values in this list must match the host name(s) used for 
+	// the RouteGroup in order to terminate TLS for the host(s).
 	// +kubebuilder:validation:MinItems=1
 	Hosts []string `json:"hosts,omitempty"`
 
-	// SecretName is the name of the secret used to terminate TLS traffic on port 443.
-	// Field is left optional to allow TLS routing based on SNI hostname alone.
-	// +optional
+	// SecretName is the name of the secret used to terminate TLS traffic.
+	// Secret should reside in the same namespace as the RouteGroup.
 	SecretName string `json:"secretName,omitempty"`
 }
 
