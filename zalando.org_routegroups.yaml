@@ -234,6 +234,9 @@ spec:
                         TLS traffic. Secret should reside in the same namespace as
                         the RouteGroup.
                       type: string
+                  required:
+                  - hosts
+                  - secretName
                   type: object
                 type: array
             required:
