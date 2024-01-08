@@ -178,10 +178,12 @@ type RouteGroupTLSSpec struct {
 	// The values in this list must match the host name(s) used for 
 	// the RouteGroup in order to terminate TLS for the host(s).
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:Required
 	Hosts []string `json:"hosts,omitempty"`
 
 	// SecretName is the name of the secret used to terminate TLS traffic.
 	// Secret should reside in the same namespace as the RouteGroup.
+	// +kubebuilder:validation:Required
 	SecretName string `json:"secretName,omitempty"`
 }
 
