@@ -214,6 +214,31 @@ spec:
                   type: object
                 minItems: 1
                 type: array
+              tls:
+                description: TLS defines which Kubernetes secret will be used to terminate
+                  the connection based on the matching hostnames
+                items:
+                  properties:
+                    hosts:
+                      description: TLS hosts specify the list of hosts included in
+                        the TLS secret. The values in this list must match the host
+                        name(s) used for the RouteGroup in order to terminate TLS
+                        for the host(s).
+                      items:
+                        pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
+                        type: string
+                      minItems: 1
+                      type: array
+                    secretName:
+                      description: SecretName is the name of the secret used to terminate
+                        TLS traffic. Secret should reside in the same namespace as
+                        the RouteGroup.
+                      type: string
+                  required:
+                  - hosts
+                  - secretName
+                  type: object
+                type: array
             required:
             - backends
             type: object
