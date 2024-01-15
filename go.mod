@@ -17,9 +17,9 @@ require (
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	k8s.io/apimachinery v0.23.17
-	k8s.io/client-go v0.23.17
-	k8s.io/code-generator v0.23.17
+	k8s.io/apimachinery v0.24.17
+	k8s.io/client-go v0.24.17
+	k8s.io/code-generator v0.24.17
 	k8s.io/klog v1.0.0 // indirect
 	sigs.k8s.io/controller-tools v0.8.0
 	sigs.k8s.io/structured-merge-diff/v3 v3.0.0 // indirect
