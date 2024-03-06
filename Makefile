@@ -31,7 +31,7 @@ $(GENERATED): $(CRD_TYPE_SOURCE)
 	bash -x ./hack/update-codegen.sh
 
 $(GENERATED_CRD): go.mod $(GENERATED)
-	go run sigs.k8s.io/controller-tools/cmd/controller-gen crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
+	go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.14.0 crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
 	# workaround to add pattern to array items. Not supported by controller-gen
 	# ref: https://github.com/kubernetes-sigs/controller-tools/issues/342
 	perl -i -p0e 's|(\s*)(hosts:.*?items:)|$$1$$2$$1    pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*\$$"|sg' $(GENERATED_CRD)

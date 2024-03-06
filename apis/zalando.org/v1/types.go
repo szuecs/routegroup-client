@@ -175,7 +175,7 @@ type RouteGroupRouteSpec struct {
 // +k8s:deepcopy-gen=true
 type RouteGroupTLSSpec struct {
 	// TLS hosts specify the list of hosts included in the TLS secret.
-	// The values in this list must match the host name(s) used for 
+	// The values in this list must match the host name(s) used for
 	// the RouteGroup in order to terminate TLS for the host(s).
 	// +kubebuilder:validation:MinItems=1
 	Hosts []string `json:"hosts"`
