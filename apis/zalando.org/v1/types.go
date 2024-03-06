@@ -42,6 +42,7 @@ type RouteGroupList struct {
 // +k8s:deepcopy-gen=true
 type RouteGroupSpec struct {
 	// List of hostnames for the RouteGroup
+	// +kubebuilder:validation:MinItems=1
 	Hosts []string `json:"hosts,omitempty"`
 	// List of backends that can be referenced in the routes
 	Backends []RouteGroupBackend `json:"backends"`
