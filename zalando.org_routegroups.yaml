@@ -134,6 +134,7 @@ spec:
                 items:
                   pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
                   type: string
+                minItems: 1
                 type: array
               routes:
                 description: Routes describe how a matching HTTP request is handled
