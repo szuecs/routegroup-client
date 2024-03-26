@@ -134,8 +134,12 @@ spec:
                   maxLength: 255
                   pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                   type: string
+                maxItems: 255
                 minItems: 1
                 type: array
+                x-kubernetes-validations:
+                - message: hosts must be unique
+                  rule: self.all(i, size(self.filter(j, j==i)) == 1)
               routes:
                 description: Routes describe how a matching HTTP request is handled
                   and where it is forwarded to

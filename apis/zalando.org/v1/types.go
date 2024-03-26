@@ -43,6 +43,8 @@ type RouteGroupList struct {
 type RouteGroupSpec struct {
 	// List of hostnames for the RouteGroup
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=255
+	// +kubebuilder:validation:XValidation:rule="self.all(i, size(self.filter(j, j==i)) == 1)", message="hosts must be unique"
 	Hosts []string `json:"hosts,omitempty"`
 	// List of backends that can be referenced in the routes
 	Backends []RouteGroupBackend `json:"backends"`
