@@ -43,6 +43,7 @@ type RouteGroupList struct {
 type RouteGroupSpec struct {
 	// List of hostnames for the RouteGroup
 	// +kubebuilder:validation:MinItems=1
+	// +listType=set
 	Hosts []string `json:"hosts,omitempty"`
 	// List of backends that can be referenced in the routes
 	Backends []RouteGroupBackend `json:"backends"`
@@ -179,6 +180,7 @@ type RouteGroupTLSSpec struct {
 	// The values in this list must match the host name(s) used for
 	// the RouteGroup in order to terminate TLS for the host(s).
 	// +kubebuilder:validation:MinItems=1
+	// +listType=set
 	Hosts []string `json:"hosts"`
 
 	// SecretName is the name of the secret used to terminate TLS traffic.
