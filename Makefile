@@ -31,10 +31,7 @@ $(GENERATED): $(CRD_TYPE_SOURCE)
 	bash -x ./hack/update-codegen.sh
 
 $(GENERATED_CRD): go.mod $(GENERATED)
-	go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.14.0 crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
-	# workaround to add validation to array items. Not supported by controller-gen
-	# ref: https://github.com/kubernetes-sigs/controller-tools/issues/342
-	go run hack/crd/add_hosts_validation.go $(GENERATED_CRD)
+	go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.15.0 crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
 
 build.local: $(LOCAL_BINARIES) $(GENERATED_CRD)
 build.linux: $(LINUX_BINARIES) $(GENERATED_CRD)
