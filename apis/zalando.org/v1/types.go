@@ -43,6 +43,8 @@ type RouteGroupList struct {
 type RouteGroupSpec struct {
 	// List of hostnames for the RouteGroup
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:items:MaxLength=255
+	// +kubebuilder:validation:items:Pattern="^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
 	// +listType=set
 	Hosts []string `json:"hosts,omitempty"`
 	// List of backends that can be referenced in the routes
@@ -180,6 +182,8 @@ type RouteGroupTLSSpec struct {
 	// The values in this list must match the host name(s) used for
 	// the RouteGroup in order to terminate TLS for the host(s).
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:items:MaxLength=255
+	// +kubebuilder:validation:items:Pattern="^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
 	// +listType=set
 	Hosts []string `json:"hosts"`
 
