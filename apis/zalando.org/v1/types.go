@@ -71,6 +71,7 @@ const (
 	DynamicRouteGroupBackend  RouteGroupBackendType = "dynamic"
 	LBRouteGroupBackend       RouteGroupBackendType = "lb"
 	NetworkRouteGroupBackend  RouteGroupBackendType = "network"
+	ForwardRouteGroupBackend  RouteGroupBackendType = "forward"
 )
 
 // BackendAlgorithmType is the type of algorithm used for load balancing
@@ -95,7 +96,8 @@ type RouteGroupBackend struct {
 	// `dynamic` - use the backend provided by filters. This allows skipper as library users to do proxy calls to a certain target from their own implementation dynamically looked up by their filters.
 	// `lb` - balance the load across multiple network endpoints using specified algorithm. If algorithm is not specified it will use the default algorithm set by Skipper at start.
 	// `network` - use arbitrary HTTP or HTTPS URL.
-	// +kubebuilder:validation:Enum=service;shunt;loopback;dynamic;lb;network
+	// `forward` - replaced by a network backend chosen by skipper -forward-backend-url.
+	// +kubebuilder:validation:Enum=service;shunt;loopback;dynamic;lb;network;forward
 	Type RouteGroupBackendType `json:"type"`
 	// Address is required for type `network`
 	// +optional

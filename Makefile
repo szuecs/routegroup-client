@@ -31,7 +31,7 @@ $(GENERATED): $(CRD_TYPE_SOURCE)
 	bash -x ./hack/update-codegen.sh
 
 $(GENERATED_CRD): go.mod $(GENERATED)
-	go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.15.0 crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
+	go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.19.0 crd:crdVersions=v1 paths=./apis/... output:crd:dir=.
 
 build.local: $(LOCAL_BINARIES) $(GENERATED_CRD)
 build.linux: $(LINUX_BINARIES) $(GENERATED_CRD)
