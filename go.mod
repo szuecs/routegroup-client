@@ -4,9 +4,9 @@ go 1.24.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1
-	k8s.io/apimachinery v0.34.1
+	k8s.io/apimachinery v0.34.3
 	k8s.io/client-go v0.34.1
-	k8s.io/code-generator v0.34.1
+	k8s.io/code-generator v0.34.3
 )
 
 require (
