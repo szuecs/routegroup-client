@@ -83,6 +83,7 @@ const (
 	RandomBackendAlgorithm                BackendAlgorithmType = "random"
 	ConsistentHashBackendAlgorithm        BackendAlgorithmType = "consistentHash"
 	PowerOfRandomNChoicesBackendAlgorithm BackendAlgorithmType = "powerOfRandomNChoices"
+	WeightedRoundRobinBackendAlgorithm    BackendAlgorithmType = "weightedRoundRobin"
 )
 
 // +k8s:deepcopy-gen=true
@@ -107,7 +108,8 @@ type RouteGroupBackend struct {
 	// `random` - backend is chosen at random.
 	// `consistentHash` - backend is chosen by [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) algorithm based on the request key. The request key is derived from `X-Forwarded-For` header or request remote IP address as the fallback. Use [`consistentHashKey`](filters.md#consistenthashkey) filter to set the request key. Use [`consistentHashBalanceFactor`](filters.md#consistenthashbalancefactor) to prevent popular keys from overloading a single backend endpoint.
 	// `powerOfRandomNChoices` - backend is chosen by selecting N random endpoints and picking the one with least outstanding requests from them (see http://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf).
-	// +kubebuilder:validation:Enum=roundRobin;random;consistentHash;powerOfRandomNChoices
+	// `weightedRoundRobin` - backend is chosen by smooth weighted round robin with dynamic weights based on the ratio of successful round trips per endpoint, weights are updated by the passive health check when enabled.
+	// +kubebuilder:validation:Enum=roundRobin;random;consistentHash;powerOfRandomNChoices;weightedRoundRobin
 	// +optional
 	Algorithm BackendAlgorithmType `json:"algorithm,omitempty"`
 	// Endpoints is required for type `lb`
