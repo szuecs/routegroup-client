@@ -5,13 +5,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	zalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
+	apiszalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
 	versioned "github.com/szuecs/routegroup-client/client/clientset/versioned"
 	internalinterfaces "github.com/szuecs/routegroup-client/client/informers/externalversions/internalinterfaces"
-	v1 "github.com/szuecs/routegroup-client/client/listers/zalando.org/v1"
+	zalandoorgv1 "github.com/szuecs/routegroup-client/client/listers/zalando.org/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // RouteGroups.
 type RouteGroupInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.RouteGroupLister
+	Lister() zalandoorgv1.RouteGroupLister
 }
 
 type routeGroupInformer struct {
@@ -43,21 +43,33 @@ func NewRouteGroupInformer(client versioned.Interface, namespace string, resyncP
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredRouteGroupInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ZalandoV1().RouteGroups(namespace).List(context.TODO(), options)
+				return client.ZalandoV1().RouteGroups(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ZalandoV1().RouteGroups(namespace).Watch(context.TODO(), options)
+				return client.ZalandoV1().RouteGroups(namespace).Watch(context.Background(), options)
 			},
-		},
-		&zalandoorgv1.RouteGroup{},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ZalandoV1().RouteGroups(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ZalandoV1().RouteGroups(namespace).Watch(ctx, options)
+			},
+		}, client),
+		&apiszalandoorgv1.RouteGroup{},
 		resyncPeriod,
 		indexers,
 	)
@@ -68,9 +80,9 @@ func (f *routeGroupInformer) defaultInformer(client versioned.Interface, resyncP
 }
 
 func (f *routeGroupInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&zalandoorgv1.RouteGroup{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiszalandoorgv1.RouteGroup{}, f.defaultInformer)
 }
 
-func (f *routeGroupInformer) Lister() v1.RouteGroupLister {
-	return v1.NewRouteGroupLister(f.Informer().GetIndexer())
+func (f *routeGroupInformer) Lister() zalandoorgv1.RouteGroupLister {
+	return zalandoorgv1.NewRouteGroupLister(f.Informer().GetIndexer())
 }

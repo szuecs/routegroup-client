@@ -5,8 +5,8 @@
 package versioned
 
 import (
-	"fmt"
-	"net/http"
+	fmt "fmt"
+	http "net/http"
 
 	zalandov1 "github.com/szuecs/routegroup-client/client/clientset/versioned/typed/zalando.org/v1"
 	discovery "k8s.io/client-go/discovery"

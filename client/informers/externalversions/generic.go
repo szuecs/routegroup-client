@@ -5,7 +5,7 @@
 package externalversions
 
 import (
-	"fmt"
+	fmt "fmt"
 
 	v1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

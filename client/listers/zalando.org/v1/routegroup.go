@@ -5,10 +5,10 @@
 package v1
 
 import (
-	v1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	zalandoorgv1 "github.com/szuecs/routegroup-client/apis/zalando.org/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RouteGroupLister helps list RouteGroups.
@@ -16,7 +16,7 @@ import (
 type RouteGroupLister interface {
 	// List lists all RouteGroups in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.RouteGroup, err error)
+	List(selector labels.Selector) (ret []*zalandoorgv1.RouteGroup, err error)
 	// RouteGroups returns an object that can list and get RouteGroups.
 	RouteGroups(namespace string) RouteGroupNamespaceLister
 	RouteGroupListerExpansion
@@ -24,25 +24,17 @@ type RouteGroupLister interface {
 
 // routeGroupLister implements the RouteGroupLister interface.
 type routeGroupLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*zalandoorgv1.RouteGroup]
 }
 
 // NewRouteGroupLister returns a new RouteGroupLister.
 func NewRouteGroupLister(indexer cache.Indexer) RouteGroupLister {
-	return &routeGroupLister{indexer: indexer}
-}
-
-// List lists all RouteGroups in the indexer.
-func (s *routeGroupLister) List(selector labels.Selector) (ret []*v1.RouteGroup, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.RouteGroup))
-	})
-	return ret, err
+	return &routeGroupLister{listers.New[*zalandoorgv1.RouteGroup](indexer, zalandoorgv1.Resource("routegroup"))}
 }
 
 // RouteGroups returns an object that can list and get RouteGroups.
 func (s *routeGroupLister) RouteGroups(namespace string) RouteGroupNamespaceLister {
-	return routeGroupNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return routeGroupNamespaceLister{listers.NewNamespaced[*zalandoorgv1.RouteGroup](s.ResourceIndexer, namespace)}
 }
 
 // RouteGroupNamespaceLister helps list and get RouteGroups.
@@ -50,36 +42,15 @@ func (s *routeGroupLister) RouteGroups(namespace string) RouteGroupNamespaceList
 type RouteGroupNamespaceLister interface {
 	// List lists all RouteGroups in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.RouteGroup, err error)
+	List(selector labels.Selector) (ret []*zalandoorgv1.RouteGroup, err error)
 	// Get retrieves the RouteGroup from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.RouteGroup, error)
+	Get(name string) (*zalandoorgv1.RouteGroup, error)
 	RouteGroupNamespaceListerExpansion
 }
 
 // routeGroupNamespaceLister implements the RouteGroupNamespaceLister
 // interface.
 type routeGroupNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RouteGroups in the indexer for a given namespace.
-func (s routeGroupNamespaceLister) List(selector labels.Selector) (ret []*v1.RouteGroup, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.RouteGroup))
-	})
-	return ret, err
-}
-
-// Get retrieves the RouteGroup from the indexer for a given namespace and name.
-func (s routeGroupNamespaceLister) Get(name string) (*v1.RouteGroup, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("routegroup"), name)
-	}
-	return obj.(*v1.RouteGroup), nil
+	listers.ResourceIndexer[*zalandoorgv1.RouteGroup]
 }

@@ -15,7 +15,7 @@ type FakeZalandoV1 struct {
 }
 
 func (c *FakeZalandoV1) RouteGroups(namespace string) v1.RouteGroupInterface {
-	return &FakeRouteGroups{c, namespace}
+	return newFakeRouteGroups(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
